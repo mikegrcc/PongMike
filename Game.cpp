@@ -5,6 +5,7 @@
 #include "Game.hpp"
 #include "Paddle.hpp"
 #include "Ball.hpp"
+#include "EmbeddedFont.hpp"
 
 Game::Game()
     : m_Window(sf::VideoMode({800, 600}), "SFML Pong"),
@@ -12,13 +13,10 @@ Game::Game()
       m_LeftPaddle(std::make_unique<Paddle>(50.f, 600 / 2.0f - 50.f)),
       m_RightPaddle(std::make_unique<Paddle>(725.f, 600 / 2.0f - 50.f))
 {
-     // Attempt to load a font from a common system path
-     if (!m_Font.openFromFile("/usr/share/fonts/truetype/dejavu/Arial.ttf")) {
-         // Fallback for other systems (e.g., Windows)
-         if (!m_Font.openFromFile("C:/Windows/Fonts/Arial.ttf")) {
-             // Handle error - font not found
-         }
-     }
+    if (!m_Font.openFromMemory(assets_Roboto_SemiBold_ttf, assets_Roboto_SemiBold_ttf_len))
+    {
+        throw std::runtime_error("Failed to load font from memory!");
+    }
     m_ScoreText = std::make_unique<sf::Text>(m_Font);
     m_InstructionsText = std::make_unique<sf::Text>(m_Font);
 

@@ -47,11 +47,30 @@ FetchContent_Declare(SFML
         SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
+# Find the xxd utility
+find_program(XXD_EXECUTABLE xxd REQUIRED)
+
+# Define the font file and the location for the generated header
+set(FONT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/assets/Roboto-SemiBold.ttf")
+set(FONT_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/EmbeddedFont.hpp")
+
+# Add a custom command to generate the header before compiling
+add_custom_command(
+        OUTPUT ${FONT_HEADER}
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/assets"
+        COMMAND ${XXD_EXECUTABLE} -i ${FONT_FILE} > ${FONT_HEADER}
+        DEPENDS ${FONT_FILE}
+        COMMENT "Generating EmbeddedFont.hpp from font file..."
+)
+
+
 add_library(Ball Ball.hpp Ball.cpp)
 target_link_libraries(Ball PUBLIC SFML::Graphics)
 add_library(Paddle Paddle.hpp Paddle.cpp)
 target_link_libraries(Paddle PUBLIC SFML::Graphics)
-add_library(Game Game.hpp Game.cpp)
+
+add_library(Game Game.hpp Game.cpp ${FONT_HEADER})
+target_include_directories(Game PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 target_link_libraries(Game PRIVATE Ball Paddle SFML::Graphics)
 
 add_executable(${PROJECT_NAME} main.cpp)
