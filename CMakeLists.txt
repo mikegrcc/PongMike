@@ -75,3 +75,6 @@ target_link_libraries(Game PRIVATE Ball Paddle SFML::Graphics)
 
 add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE Game SFML::Graphics)
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE SFML::main)
+endif()
