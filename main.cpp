@@ -1,8 +1,7 @@
-//
-// Created by Huanming Song on 7/8/25.
-//
-#include <fmt/core.h>
+#include "Game.hpp"
 
 int main() {
-  fmt::print("Hello world!\n");
+    Game game;
+    game.run();
+    return 0;
 }

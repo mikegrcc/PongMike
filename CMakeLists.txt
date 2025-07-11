@@ -38,7 +38,6 @@ endif ()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 
 # External Libraries
-find_package(fmt CONFIG REQUIRED)
 include(FetchContent)
 FetchContent_Declare(SFML
         GIT_REPOSITORY https://github.com/SFML/SFML.git
@@ -48,5 +47,12 @@ FetchContent_Declare(SFML
         SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
+add_library(Ball Ball.hpp Ball.cpp)
+target_link_libraries(Ball PUBLIC SFML::Graphics)
+add_library(Paddle Paddle.hpp Paddle.cpp)
+target_link_libraries(Paddle PUBLIC SFML::Graphics)
+add_library(Game Game.hpp Game.cpp)
+target_link_libraries(Game PRIVATE Ball Paddle SFML::Graphics)
+
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
+target_link_libraries(${PROJECT_NAME} PRIVATE Game SFML::Graphics)
